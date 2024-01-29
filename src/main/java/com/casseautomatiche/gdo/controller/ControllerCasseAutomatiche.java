@@ -10,6 +10,7 @@ import com.casseautomatiche.gdo.utilities.dto.RigaScontrinoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +36,8 @@ public class ControllerCasseAutomatiche {
     - Dato un barcode, registrare un articolo all'interno dello scontrino. è possibile inserire lo stesso articolo più volte
     */
     @PostMapping("/creazione-scontrino")
-    public ResponseEntity<Void> creaScontrino(@RequestBody List <RigaScontrinoRequest> articoli){
-        service.aggiungiArticoloAScontrino(articoli);
+    public ResponseEntity<Void> creaScontrino(@RequestBody List<String> barcode){
+        service.aggiungiArticoloAScontrino(barcode);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     /* - Dati gli scontrini, calcolare lo stock a fine giornata*/

@@ -22,7 +22,7 @@ public interface GdoService {
     void inserisciNuovoArticolo(ArticoloRequest articolo);
     void creaNuovoReparto(Reparto reparto);
     void generazioneBarcode (GenerateBarcodeRequest request);
-    void aggiungiArticoloAScontrino(List <RigaScontrinoRequest> righe);
+    void aggiungiArticoloAScontrino(List<String> barcodes);
     Map<String,Integer> calcolaStockAFineGiornata(String dataParametro,UUID idArticolo);
     Map<String,Object> objectForResocontoArticolo(String data, String idArticolo);
 

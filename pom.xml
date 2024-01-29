@@ -11,7 +11,7 @@
 	<groupId>com.casseautomatiche</groupId>
 	<artifactId>gdo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>gdo</name>
+	<name>G.D.O</name>
 	<description>Progetto per la gestione delle casse automatiche</description>
 	<properties>
 		<java.version>17</java.version>

@@ -24,4 +24,23 @@ public interface RigaDettaglioScontrinoRepository extends JpaRepository<RigaDett
             AND
             to_char(s.data_emissione,'dd/MM/YYYY') = :dataParametro""",nativeQuery = true)
     Integer stockIniziale(@Param("dataParametro") String dataParametro,@Param("idArticolo") UUID idArticolo);
+    @Query(value = """
+            SELECT EXISTS (SELECT ds.*
+            FROM dettaglio_scontrino ds\s
+            INNER JOIN scontrino s ON s.id = ds.id_scontrino\s
+            INNER JOIN articolo a ON a.id = ds.id_articolo
+            WHERE s.id = :idScontrino
+            AND
+            a.id = :idArticolo)""",nativeQuery = true)
+    boolean existByIdArticoloAndIdScontrino(UUID idScontrino, UUID idArticolo);
+
+    @Query(value = """
+            SELECT ds.*
+            FROM dettaglio_scontrino ds\s
+            INNER JOIN scontrino s ON s.id = ds.id_scontrino\s
+            INNER JOIN articolo a ON a.id = ds.id_articolo
+            WHERE s.id = :idScontrino
+            AND
+            a.id = :idArticolo""",nativeQuery = true)
+    RigaDettaglioScontrino IdArticoloAndIdScontrino(UUID idScontrino, UUID idArticolo);
 }

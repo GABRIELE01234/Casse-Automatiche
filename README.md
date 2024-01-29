@@ -105,16 +105,10 @@ Attività da completare :
 
 * **RESPONSE:** *201 CREATED*
 
-#### BODY REQUEST
+#### BODY REQUEST : 'List<String> barcode' 
 
 ```json
-[
-    {
-        "barcode": "1fb10652",
-        "quantita": 5
-    }, 
-       ...
-]
+["a9a447d0", "e92edf29", "79a592ca", "ceb40e30", "393c926a"]
 ```
 
 ### 

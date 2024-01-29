@@ -108,28 +108,43 @@ public class GdoServiceImpl implements GdoService {
 
     @Transactional
     @Override
-    public void aggiungiArticoloAScontrino(List<RigaScontrinoRequest> righe) {
+    public void aggiungiArticoloAScontrino(List<String> barcodes) {
         float tot = 0;
         Scontrino scontrino = creaScontrino();
-        for (RigaScontrinoRequest riga : righe) {
-            Articolo articolo = articoloRepository.findArticoloByBarcode(riga.getBarcode());
+        for (String code : barcodes) {
+            RigaDettaglioScontrino rigaDettaglioScontrino = new RigaDettaglioScontrino();
+            Articolo articolo = articoloRepository.findArticoloByBarcode(code);
             Stock stock = stockRepository.findByIdArticolo(articolo.getId());
-            int quantitaIniziale = stock.getQuantitaIniziale();
+            int disponibile = stock.getQuantitaIniziale();
             Prezzo prezzo = prezzoRepository.findByIdArticolo(articolo.getId());
-            if (quantitaIniziale < riga.getQuantita()){
-                throw new MyRuntimeException("ATTENZIONE: L'ARTICOLO "+articolo.getNome()+" HA UNO STOCK DISPINIBILE DI MAX "+ quantitaIniziale+". RIPROVA INSERENDO UNA QUANTITA CHE NON SUPERA QUELLA DISPONIBILE.",116);
+            rigaDettaglioScontrino.setScontrino(scontrino);
+            if (rigaDettaglioScontrinoRepository.existByIdArticoloAndIdScontrino(scontrino.getId(), articolo.getId())) {
+                rigaDettaglioScontrino = rigaDettaglioScontrinoRepository.IdArticoloAndIdScontrino(scontrino.getId(), articolo.getId());
+                rigaDettaglioScontrino.setQuantita(rigaDettaglioScontrino.getQuantita() + 1);
+                rigaDettaglioScontrino.setSub_tot(rigaDettaglioScontrino.getQuantita() * prezzo.getValore());
+                verificaStockDisponibile(disponibile,1);
+                stock.setQuantitaIniziale(disponibile - 1);
+                rigaDettaglioScontrinoRepository.saveAndFlush(rigaDettaglioScontrino);
+                stockRepository.saveAndFlush(stock);
+                tot += rigaDettaglioScontrino.getSub_tot();
+            } else if (!rigaDettaglioScontrinoRepository.existByIdArticoloAndIdScontrino(scontrino.getId(), articolo.getId())) {
+                rigaDettaglioScontrino.setArticolo(articolo);
+                rigaDettaglioScontrino.setQuantita(1);
+                rigaDettaglioScontrino.setSub_tot(prezzo.getValore());
+                verificaStockDisponibile(disponibile,rigaDettaglioScontrino.getQuantita());
+                stock.setQuantitaIniziale(disponibile - 1);
+                rigaDettaglioScontrinoRepository.saveAndFlush(rigaDettaglioScontrino);
+                stockRepository.saveAndFlush(stock);
+                tot += rigaDettaglioScontrino.getSub_tot();
             }
-            stock.setQuantitaIniziale(quantitaIniziale - riga.getQuantita());
-            stockRepository.saveAndFlush(stock);
-            scontrino.aggiungiRigaScontrino(articolo, riga.getQuantita(), prezzo);
-            tot += prezzo.getValore() * riga.getQuantita();
-        }
-        for (RigaDettaglioScontrino rigaDaSalvare : scontrino.getRigheDettaglioScontrino()){
-            rigaDaSalvare.setScontrino(scontrino);
-            rigaDettaglioScontrinoRepository.save(rigaDaSalvare);
         }
         scontrino.setTotale(tot);
         scontrinoRepository.save(scontrino);
+    }
+    public void verificaStockDisponibile (Integer disponibile,Integer richiesta){
+        if (disponibile < richiesta) {
+            throw new MyRuntimeException("ATTENZIONE: RIPROVA INSERENDO UNA QUANTITA CHE NON SUPERA QUELLA DISPONIBILE. DISPONIBILE: "+disponibile+" -- RICHIESTA: "+richiesta, 116);
+        }
     }
     @Transactional(readOnly = true)
     @Override
