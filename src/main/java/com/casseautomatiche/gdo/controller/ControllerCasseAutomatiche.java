@@ -6,11 +6,9 @@ import com.casseautomatiche.gdo.repository.ScontrinoRepository;
 import com.casseautomatiche.gdo.service.GdoServiceImpl;
 import com.casseautomatiche.gdo.utilities.dto.ArticoloRequest;
 import com.casseautomatiche.gdo.utilities.dto.GenerateBarcodeRequest;
-import com.casseautomatiche.gdo.utilities.dto.RigaScontrinoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

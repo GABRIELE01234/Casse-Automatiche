@@ -4,7 +4,6 @@ import com.casseautomatiche.gdo.entity.Reparto;
 import com.casseautomatiche.gdo.entity.Scontrino;
 import com.casseautomatiche.gdo.utilities.dto.ArticoloRequest;
 import com.casseautomatiche.gdo.utilities.dto.GenerateBarcodeRequest;
-import com.casseautomatiche.gdo.utilities.dto.RigaScontrinoRequest;
 
 import java.util.List;
 import java.util.Map;

@@ -1,7 +1,6 @@
 package com.casseautomatiche.gdo.service;
 
 import com.casseautomatiche.gdo.entity.*;
-import com.casseautomatiche.gdo.utilities.dto.RigaScontrinoRequest;
 import com.casseautomatiche.gdo.utilities.exception.MyRuntimeException;
 import com.casseautomatiche.gdo.repository.*;
 import com.casseautomatiche.gdo.utilities.dto.ArticoloRequest;
