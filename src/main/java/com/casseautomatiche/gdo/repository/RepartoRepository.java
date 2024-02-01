@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 @Repository
 public interface RepartoRepository extends JpaRepository<Reparto, UUID> {
@@ -18,7 +19,7 @@ public interface RepartoRepository extends JpaRepository<Reparto, UUID> {
             WHERE to_char(s.data_emissione,'dd/MM/YYYY') = :dataParametro
             AND
             r.id = :idReparto""",nativeQuery = true)
-    Float incassoReparto(@Param("dataParametro") String dataParametro,@Param("idReparto") UUID idReparto);
+    BigDecimal incassoReparto(@Param("dataParametro") String dataParametro, @Param("idReparto") UUID idReparto);
     @Query(value = """
             SELECT
             sum(ds.sub_tot)\s
@@ -28,5 +29,5 @@ public interface RepartoRepository extends JpaRepository<Reparto, UUID> {
             INNER JOIN scontrino s ON s.id = ds.id_scontrino\s
             WHERE to_char(s.data_emissione,'YYYY') = :a
             AND r.id = :idReparto""",nativeQuery = true)
-    Float incassoByAnnoAndReparto(String a, UUID idReparto);
+    BigDecimal incassoByAnnoAndReparto(String a, UUID idReparto);
 }

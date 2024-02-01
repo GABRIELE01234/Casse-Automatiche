@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -25,14 +26,14 @@ public class Scontrino {
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date dataEmissione = new Date();
     @Column(name = "totale")
-    private Float totale;
+    private BigDecimal totale;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "scontrino")
     private Collection<RigaDettaglioScontrino> righeDettaglioScontrino = new ArrayList<>();
 
-    public Scontrino(Float totale) {
+    public Scontrino(BigDecimal totale) {
         this.totale = totale;
     }
     public void aggiungiRigaScontrino(Articolo articolo, int quantita, Prezzo prezzo) {
-        this.righeDettaglioScontrino.add(new RigaDettaglioScontrino(articolo, quantita,prezzo.getValore() * quantita));
+        this.righeDettaglioScontrino.add(new RigaDettaglioScontrino(articolo, quantita,prezzo.getValore().multiply(new BigDecimal(quantita))));
     }
 }

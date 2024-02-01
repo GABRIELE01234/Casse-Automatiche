@@ -11,4 +11,9 @@ import java.util.UUID;
 public interface ArticoloRepository extends JpaRepository<Articolo, UUID> {
     @Query(value = "SELECT a.* FROM barcodes b INNER JOIN articolo a ON a.id = b.id_articolo WHERE b.barcode = :barcode",nativeQuery = true)
     Articolo findArticoloByBarcode(@Param("barcode") String barcode);
+    @Query(value = "SELECT EXISTS(SELECT a.*" +
+            "FROM barcodes b " +
+            "INNER JOIN articolo a ON a.id = b.id_articolo " +
+            "WHERE b.barcode = :code)",nativeQuery = true)
+    boolean existArticoloByBarcode(String code);
 }

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -26,7 +27,7 @@ public class Prezzo {
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Timestamp dataPrezzo = Timestamp.valueOf(LocalDateTime.now());
     @Column(name = "valore")
-    private Float valore;
+    private BigDecimal valore;
     @ManyToOne( optional = false, targetEntity = Articolo.class)
     @JoinColumn(name = "id_articolo", nullable = false)
     private Articolo articolo;

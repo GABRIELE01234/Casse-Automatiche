@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -27,9 +28,9 @@ public class RigaDettaglioScontrino {
     @Column(name = "quantita",nullable = false)
     private Integer quantita;
     @Column(name = "sub_tot", nullable = false)
-    private Float sub_tot;
+    private BigDecimal sub_tot;
 
-    public RigaDettaglioScontrino(Articolo articolo, Integer quantita, Float sub_tot) {
+    public RigaDettaglioScontrino(Articolo articolo, Integer quantita, BigDecimal sub_tot) {
         this.articolo = articolo;
         this.quantita = quantita;
         this.sub_tot = sub_tot;

@@ -7,12 +7,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.UUID;
 @Repository
 public interface RigaDettaglioScontrinoRepository extends JpaRepository<RigaDettaglioScontrino, UUID> {
-    @Query(value = "SELECT ds.* FROM dettaglio_scontrino ds WHERE ds.id_scontrino = :idScontrino AND ds.id_articolo = :idArticolo",nativeQuery = true)
-    Collection<RigaDettaglioScontrino> findAllByIdScontrino(UUID idScontrino,UUID idArticolo);
+    @Query(value = "SELECT ds.* " +
+            "FROM dettaglio_scontrino ds " +
+            "WHERE ds.id_scontrino = :idScontrino ",nativeQuery = true)
+    Collection<RigaDettaglioScontrino> findAllByIdScontrino(UUID idScontrino);
 
     @Query(value = """
             SELECT sum(ds.quantita)
@@ -43,4 +46,35 @@ public interface RigaDettaglioScontrinoRepository extends JpaRepository<RigaDett
             AND
             a.id = :idArticolo""",nativeQuery = true)
     RigaDettaglioScontrino IdArticoloAndIdScontrino(UUID idScontrino, UUID idArticolo);
+
+    @Query(value = """
+                    SELECT DISTINCT
+                                  (
+                                  SELECT
+                                  sum(ds.quantita)
+                                  FROM dettaglio_scontrino ds
+                                  INNER JOIN  scontrino s ON s.id = ds.id_scontrino
+                                  INNER JOIN articolo a ON a.id = ds.id_articolo
+                                  WHERE to_char(s.data_emissione::date,'YYYY-MM-dd') = to_char(:dataParametro::date,'YYYY-MM-dd')
+                                  AND
+                                  a.id = :idArticolo
+                                  ) AS pezzi_venduti,
+                                  (
+                                  SELECT
+                                  sum(ds.sub_tot)
+                                  FROM dettaglio_scontrino ds
+                                  INNER JOIN  scontrino s ON s.id = ds.id_scontrino
+                                  INNER JOIN articolo a ON a.id = ds.id_articolo
+                                  WHERE to_char(s.data_emissione::date,'YYYY-MM-dd') = to_char(:dataParametro::date,'YYYY-MM-dd')
+                                  AND
+                                  a.id = :idArticolo
+                                  ) AS incasso_articolo
+                                  FROM dettaglio_scontrino ds
+                                  INNER JOIN  scontrino s ON s.id = ds.id_scontrino
+                                  INNER JOIN articolo a ON a.id = ds.id_articolo
+                                  WHERE to_char(s.data_emissione::date,'YYYY-MM-dd') = to_char(:dataParametro::date,'YYYY-MM-dd')
+                                  AND
+                                  a.id = :idArticolo
+                    """,nativeQuery = true)
+    ResultSet objectForResocontoArticolo(String dataParametro,UUID idArticolo);
 }
